@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Who Are You Today?</title>
+    
+    <!-- Core dependencies -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <style>
+        body {
+            background-color: #f0f2f5;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            padding: 2rem;
+        }
+        #root {
+            width: 100%;
+            max-width: 42rem;
+        }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+    <script type="text/babel" src="personality-quiz.js"></script>
+    <script type="text/babel">
+        const container = document.getElementById('root');
+        const root = ReactDOM.createRoot(container);
+        root.render(<PersonalityQuiz />);
+    </script>
+</body>
+</html>
