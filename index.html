@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Who Are You Today?</title>
+    <title>Daily Quiz Collection</title>
     
     <!-- Core dependencies -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -28,11 +28,29 @@
 </head>
 <body>
     <div id="root"></div>
-    <script type="text/babel" src="personality-quiz.js"></script>
     <script type="text/babel">
+        // Basic component setup
+        const Card = ({ children, className = "" }) => (
+            <div className={`bg-white rounded-lg shadow-lg overflow-hidden ${className}`}>
+                {children}
+            </div>
+        );
+
+        const App = () => {
+            return (
+                <Card className="w-full max-w-2xl mx-auto">
+                    <div className="p-6">
+                        <h1 className="text-2xl font-bold text-center">Who Are You Today?</h1>
+                        <p className="text-center mt-4">Coming soon!</p>
+                    </div>
+                </Card>
+            );
+        };
+
+        // Render the app
         const container = document.getElementById('root');
         const root = ReactDOM.createRoot(container);
-        root.render(<PersonalityQuiz />);
+        root.render(<App />);
     </script>
 </body>
 </html>
