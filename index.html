@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Daily Quiz Collection</title>
+    <title>Who Are You Today?</title>
     
-    <!-- Core dependencies -->
+    <!-- Dependencies -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
     <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
@@ -14,207 +14,315 @@
 
     <style>
         body {
-            background-color: #f0f2f5;
+            background: linear-gradient(135deg, #f0f4ff 0%, #f5f3ff 100%);
             min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            padding: 2rem;
         }
-        #root {
-            width: 100%;
-            max-width: 42rem;
+        .gradient-text {
+            background: linear-gradient(45deg, #4f46e5, #7c3aed);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
     </style>
 </head>
 <body>
     <div id="root"></div>
+
+    <!-- Single file with all components for immediate testing -->
     <script type="text/babel">
-        // Basic component setup
+        // Card Components
         const Card = ({ children, className = "" }) => (
-            <div className={`bg-white rounded-lg shadow-lg overflow-hidden ${className}`}>
+            <div className={`bg-white rounded-xl shadow-lg overflow-hidden ${className}`}>
                 {children}
             </div>
         );
 
-        const Question = ({ question, options, onSelect }) => (
-            <div className="mb-6">
-                <h2 className="text-lg font-semibold mb-3">{question}</h2>
-                <div className="space-y-2">
-                    {options.map((option, index) => (
-                        <button
-                            key={index}
-                            onClick={() => onSelect(option)}
-                            className="w-full text-left p-3 rounded border hover:bg-gray-50 transition-colors"
-                        >
-                            {option}
-                        </button>
-                    ))}
+        // Landing Page
+        const LandingPage = ({ onSelectQuiz }) => {
+            const quizzes = [
+                {
+                    id: 'personality',
+                    title: 'Who Are You?',
+                    description: 'Discover your personality type for today',
+                    emoji: '🎭',
+                    color: 'from-blue-500 to-blue-600'
+                },
+                {
+                    id: 'element',
+                    title: 'What Element?',
+                    description: 'Find your elemental nature: Fire, Water, Earth, or Air',
+                    emoji: '🌪️',
+                    color: 'from-purple-500 to-purple-600'
+                },
+                {
+                    id: 'spirit-animal',
+                    title: 'Spirit Animal',
+                    description: 'Which animal guides your spirit today?',
+                    emoji: '🦁',
+                    color: 'from-amber-500 to-amber-600'
+                },
+                {
+                    id: 'superhero',
+                    title: 'Superhero Match',
+                    description: 'Discover which superhero you embody',
+                    emoji: '🦸‍♂️',
+                    color: 'from-red-500 to-red-600'
+                },
+                {
+                    id: 'mythical',
+                    title: 'Mythical Being',
+                    description: 'Are you a dragon, unicorn, phoenix, or more?',
+                    emoji: '🐉',
+                    color: 'from-emerald-500 to-emerald-600'
+                }
+            ];
+
+            return (
+                <div className="min-h-screen p-6 md:p-8">
+                    <div className="max-w-6xl mx-auto">
+                        {/* Header */}
+                        <div className="text-center mb-12">
+                            <h1 className="text-5xl md:text-6xl font-bold gradient-text mb-6">
+                                Who Are You Today?
+                            </h1>
+                            <p className="text-gray-600 text-xl">
+                                Take a daily quiz and discover a new side of yourself
+                            </p>
+                        </div>
+
+                        {/* Quiz Grid */}
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                            {quizzes.map((quiz) => (
+                                <button
+                                    key={quiz.id}
+                                    onClick={() => onSelectQuiz(quiz.id)}
+                                    className="w-full bg-white p-6 rounded-xl shadow-lg hover:shadow-xl 
+                                             transition-all transform hover:-translate-y-1 text-left"
+                                >
+                                    <div className="flex items-center gap-4">
+                                        <span className="text-4xl">{quiz.emoji}</span>
+                                        <div>
+                                            <h3 className="font-bold text-xl mb-2">{quiz.title}</h3>
+                                            <p className="text-gray-600">{quiz.description}</p>
+                                        </div>
+                                    </div>
+                                </button>
+                            ))}
+                        </div>
+                    </div>
+                </div>
+            );
+        };
+
+        // Quiz Result Display
+        const ResultDisplay = ({ result, streak, bestStreak, onShare, timeUntilNext }) => (
+            <div className="text-center space-y-6">
+                <div className="mb-8">
+                    <span className="text-6xl mb-4 block">{result.emoji}</span>
+                    <h2 className="text-2xl font-bold gradient-text mb-4">
+                        {result.title}
+                    </h2>
+                    <p className="text-gray-600 text-lg">
+                        {result.description}
+                    </p>
+                </div>
+
+                <div className="flex flex-col gap-4">
+                    <div className="flex justify-center gap-4">
+                        <div className="bg-indigo-50 px-4 py-2 rounded-lg">
+                            <div className="text-sm text-indigo-600">Current Streak</div>
+                            <div className="text-2xl font-bold text-indigo-700">{streak}</div>
+                        </div>
+                        <div className="bg-purple-50 px-4 py-2 rounded-lg">
+                            <div className="text-sm text-purple-600">Best Streak</div>
+                            <div className="text-2xl font-bold text-purple-700">{bestStreak}</div>
+                        </div>
+                    </div>
+
+                    <button
+                        onClick={onShare}
+                        className="mx-auto px-6 py-3 bg-gradient-to-r from-indigo-500 to-purple-500 
+                                 text-white rounded-lg hover:from-indigo-600 hover:to-purple-600 
+                                 transition-all flex items-center gap-2 shadow-lg"
+                    >
+                        <lucide.Share2 className="w-5 h-5" />
+                        Share Result
+                    </button>
+                </div>
+
+                <div className="mt-8 text-gray-500 flex items-center justify-center gap-2">
+                    <lucide.Clock className="w-5 h-5" />
+                    <span>Next quiz available in: {timeUntilNext}</span>
                 </div>
             </div>
         );
 
-        const App = () => {
+        // Quiz Component
+        const QuizComponent = ({ quiz, onBack }) => {
             const [currentQuestion, setCurrentQuestion] = React.useState(0);
             const [answers, setAnswers] = React.useState([]);
             const [showResult, setShowResult] = React.useState(false);
+            const [result, setResult] = React.useState(null);
+            const [streak, setStreak] = React.useState(0);
+            const [bestStreak, setBestStreak] = React.useState(0);
+            const [timeUntilNext, setTimeUntilNext] = React.useState('');
 
-            const questions = [
-                {
-                    question: "How do you typically start your day?",
-                    options: [
-                        "With a detailed plan and schedule",
-                        "Going with the flow",
-                        "Hitting snooze multiple times",
-                        "With high energy and excitement"
-                    ]
-                },
-                {
-                    question: "In a group setting, you usually:",
-                    options: [
-                        "Take charge and lead discussions",
-                        "Listen and observe before contributing",
-                        "Mediate between different viewpoints",
-                        "Keep the mood light with humor"
-                    ]
-                },
-                {
-                    question: "When faced with a problem, your first approach is to:",
-                    options: [
-                        "Analyze all available information",
-                        "Trust your gut feeling",
-                        "Ask others for their opinions",
-                        "Look for creative solutions"
-                    ]
-                },
-                {
-                    question: "Your ideal weekend would be:",
-                    options: [
-                        "Following a planned itinerary",
-                        "Spontaneous adventures",
-                        "Relaxing at home",
-                        "Socializing with friends"
-                    ]
-                },
-                {
-                    question: "When making decisions, you primarily consider:",
-                    options: [
-                        "Logic and facts",
-                        "Your feelings and values",
-                        "Impact on others",
-                        "Potential outcomes"
-                    ]
-                }
-            ];
+            // Timer update
+            React.useEffect(() => {
+                const updateTimer = () => {
+                    const now = new Date();
+                    const tomorrow = new Date(now);
+                    tomorrow.setDate(tomorrow.getDate() + 1);
+                    tomorrow.setHours(0, 0, 0, 0);
+                    
+                    const timeLeft = tomorrow - now;
+                    const hours = Math.floor(timeLeft / (1000 * 60 * 60));
+                    const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
+                    const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
+                    
+                    setTimeUntilNext(`${hours}h ${minutes}m ${seconds}s`);
+                };
 
-            const personalityTypes = {
-                Analyst: {
-                    description: "You are logical, strategic, and value efficiency. You excel at problem-solving and planning.",
-                    characteristics: ["Analytical", "Strategic", "Objective", "Systematic"]
-                },
-                Creative: {
-                    description: "You are imaginative, innovative, and think outside the box. You bring fresh perspectives to situations.",
-                    characteristics: ["Innovative", "Artistic", "Intuitive", "Original"]
-                },
-                Diplomat: {
-                    description: "You are empathetic, harmonious, and value relationships. You excel at understanding and connecting with others.",
-                    characteristics: ["Empathetic", "Cooperative", "Diplomatic", "Understanding"]
-                },
-                Dynamic: {
-                    description: "You are energetic, adaptable, and embrace change. You thrive in dynamic environments.",
-                    characteristics: ["Energetic", "Flexible", "Spontaneous", "Enthusiastic"]
-                }
-            };
+                const timer = setInterval(updateTimer, 1000);
+                updateTimer();
+                return () => clearInterval(timer);
+            }, []);
 
             const handleAnswer = (answer) => {
                 const newAnswers = [...answers, answer];
                 setAnswers(newAnswers);
-                
-                if (currentQuestion < questions.length - 1) {
+
+                if (currentQuestion < 4) {
                     setCurrentQuestion(currentQuestion + 1);
                 } else {
+                    setResult(quiz.results[answer]);
+                    setStreak(streak + 1);
+                    setBestStreak(Math.max(bestStreak, streak + 1));
                     setShowResult(true);
                 }
             };
 
-            const getPersonalityResult = () => {
-                // Simple personality calculation based on answer patterns
-                const patterns = {
-                    Analyst: ["detailed plan", "analyze", "logic", "planned"],
-                    Creative: ["creative", "innovative", "fresh", "artistic"],
-                    Diplomat: ["mediate", "others", "harmonious", "understanding"],
-                    Dynamic: ["high energy", "spontaneous", "adaptable", "energetic"]
-                };
-
-                let scores = {
-                    Analyst: 0,
-                    Creative: 0,
-                    Diplomat: 0,
-                    Dynamic: 0
-                };
-
-                answers.forEach(answer => {
-                    for (let type in patterns) {
-                        if (patterns[type].some(pattern => 
-                            answer.toLowerCase().includes(pattern.toLowerCase()))) {
-                            scores[type]++;
-                        }
-                    }
-                });
-
-                const dominantType = Object.entries(scores).reduce((a, b) => 
-                    b[1] > a[1] ? b : a)[0];
-
-                return {
-                    type: dominantType,
-                    ...personalityTypes[dominantType]
-                };
+            const shareResult = () => {
+                const shareText = `Who Are You Today?\nI am ${result.title} ${result.emoji}\nStreak: ${streak} days!\nTry it yourself at: [URL]`;
+                navigator.clipboard.writeText(shareText);
+                alert('Result copied to clipboard!');
             };
 
             return (
-                <Card className="w-full max-w-2xl mx-auto">
-                    <div className="p-6">
-                        <h1 className="text-2xl font-bold text-center mb-6">Who Are You Today?</h1>
-                        
-                        {!showResult ? (
-                            <Question
-                                question={questions[currentQuestion].question}
-                                options={questions[currentQuestion].options}
-                                onSelect={handleAnswer}
-                            />
-                        ) : (
-                            <div className="text-center">
-                                <h2 className="text-xl font-semibold mb-4">Your Personality Type</h2>
-                                {(() => {
-                                    const result = getPersonalityResult();
-                                    return (
-                                        <div>
-                                            <h3 className="text-lg font-semibold text-blue-600 mb-3">
-                                                {result.type}
-                                            </h3>
-                                            <p className="mb-4">{result.description}</p>
-                                            <div className="mt-4">
-                                                <h4 className="font-semibold mb-2">Key Characteristics:</h4>
-                                                <ul className="list-none">
-                                                    {result.characteristics.map((trait, index) => (
-                                                        <li key={index} className="inline-block m-1 px-3 py-1 bg-blue-100 rounded-full">
-                                                            {trait}
-                                                        </li>
-                                                    ))}
-                                                </ul>
-                                            </div>
-                                        </div>
-                                    );
-                                })()}
-                            </div>
-                        )}
-                        
-                        {!showResult && (
-                            <div className="text-sm text-gray-500 text-center">
-                                Question {currentQuestion + 1} of {questions.length}
-                            </div>
-                        )}
-                    </div>
-                </Card>
+                <div className="max-w-2xl mx-auto p-4">
+                    <button
+                        onClick={onBack}
+                        className="mb-6 text-gray-600 hover:text-gray-800 flex items-center gap-2"
+                    >
+                        <lucide.ArrowLeft className="w-4 h-4" />
+                        Back to Menu
+                    </button>
+
+                    <Card>
+                        <div className="p-6">
+                            {!showResult ? (
+                                <div className="space-y-6">
+                                    <div className="flex justify-between text-sm text-gray-500">
+                                        <span>Question {currentQuestion + 1}/5</span>
+                                        <span>Streak: {streak}</span>
+                                    </div>
+                                    
+                                    <h3 className="text-xl text-center mb-8">
+                                        {quiz.questions[currentQuestion].question}
+                                    </h3>
+
+                                    <div className="grid gap-3">
+                                        {quiz.questions[currentQuestion].options.map((option, index) => (
+                                            <button
+                                                key={index}
+                                                onClick={() => handleAnswer(option.trait)}
+                                                className="w-full p-4 text-left rounded-lg bg-blue-50 
+                                                         hover:bg-blue-100 transition-colors border 
+                                                         border-blue-200"
+                                            >
+                                                {option.text}
+                                            </button>
+                                        ))}
+                                    </div>
+                                </div>
+                            ) : (
+                                <ResultDisplay 
+                                    result={result}
+                                    streak={streak}
+                                    bestStreak={bestStreak}
+                                    onShare={shareResult}
+                                    timeUntilNext={timeUntilNext}
+                                />
+                            )}
+                        </div>
+                    </Card>
+                </div>
+            );
+        };
+
+        // Main App
+        const App = () => {
+            const [selectedQuiz, setSelectedQuiz] = React.useState(null);
+
+            const handleBack = () => {
+                setSelectedQuiz(null);
+            };
+
+            const quizzes = {
+                personality: {
+                    questions: [
+                        {
+                            question: "How do you prefer to spend your mornings?",
+                            options: [
+                                { text: "Planning the day ahead", trait: "organized" },
+                                { text: "Creating something new", trait: "creative" },
+                                { text: "Connecting with friends", trait: "social" },
+                                { text: "Learning something interesting", trait: "curious" }
+                            ]
+                        },
+                        {
+                            question: "What energizes you most?",
+                            options: [
+                                { text: "Completing tasks", trait: "organized" },
+                                { text: "Expressing yourself", trait: "creative" },
+                                { text: "Being with others", trait: "social" },
+                                { text: "Discovering new things", trait: "curious" }
+                            ]
+                        },
+                        // Add more questions...
+                    ],
+                    results: {
+                        organized: { 
+                            title: "The Planner", 
+                            description: "You're methodical and love creating order from chaos!", 
+                            emoji: "📋" 
+                        },
+                        creative: { 
+                            title: "The Artist", 
+                            description: "Your creative spirit brings beauty to everything!", 
+                            emoji: "🎨" 
+                        },
+                        social: { 
+                            title: "The Connector", 
+                            description: "You bring people together with your warm energy!", 
+                            emoji: "🤝" 
+                        },
+                        curious: { 
+                            title: "The Explorer", 
+                            description: "Your thirst for knowledge drives you forward!", 
+                            emoji: "🔍" 
+                        }
+                    }
+                },
+                // Add more quiz types...
+            };
+
+            return selectedQuiz ? (
+                <QuizComponent 
+                    quiz={quizzes[selectedQuiz]} 
+                    onBack={handleBack}
+                />
+            ) : (
+                <LandingPage onSelectQuiz={setSelectedQuiz} />
             );
         };
 
